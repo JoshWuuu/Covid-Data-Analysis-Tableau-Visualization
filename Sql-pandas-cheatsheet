@@ -1,0 +1,113 @@
+Select
+SQL: SELECT * FROM players
+Pandas: players
+
+Select some columns
+SQL: SELECT Name, Age FROM players
+pandas: plyaers[["Name", "Age"]]
+
+SELECT of top some rows
+SQL: SELECT TOP 5 * FROM players
+Pandas: players.head(5)
+
+DISTINCT:
+SQL: SELECT DISTINCT Position FROM players
+pandas: players["Postiion"][~players['Postiion'].duplicated()]
+
+WHERE:
+SQL: SELECT * FROM players WHERE Position = 'QB'
+Pandas: players[players.Position == "QB"] or players[players["Position"] == 'QB']
+
+SELECTION of specific rows and some columns
+SQL: SELECT Name, Age FROM players WHERE Position = 'QB'
+Pandas: players[["Name", "Age"]][players.Postiion == 'QB']
+
+NOT:
+SQL: SELECT * FROM players WHERE NOT Position == 'QB'
+Pandas: players[~(players.Position == 'QB')]
+
+and:
+SQL: SELECT Name, Age FROM players WHERE Position = 'QB' AND Age < 30
+Pandas: players[["Name", "Age"]][(players.Position == "QB") & (players.Age < 30)]
+
+or: 
+SQL: SELECT Name, Age FROM players WHERE Position = 'QB' OR Position = 'RB'
+Pandas: players[["Name", "Age"]][(players.Position == "QB") |(players.Position == "RB")]
+
+and with or:
+SQL: SELECT Name, Age FROM
+players
+WHERE (Position = 'QB' AND Age < 25) OR (Position = 'RB' AND Age < 25)
+pandas: players[["Name", "Age"]][
+(
+    (players.Position == "QB") & (players.Age < 25)
+) | (
+    (players.Position == "RB") & (players.Age < 25)
+)]
+
+In:
+SQL: SELECT * FROM players WHERE Position IN ('QB', 'RB')
+pandas: players[players.Position.isin(["QB", "RB"])]
+
+Like:
+SQL: SELECT * FROM players WHERE Team LIKE '%ns%'
+pandas: players[players.Team.str.contains("ns")]
+
+Order by:
+SQL: SELECT * FROM palyers ORDER BY Name
+Pandas: players.sort_values("Name")
+
+SQL: SELECT * FROM players ORDER BY Age, Name
+Pandas: players.sort_values(["Age", "Name"])
+
+Order by desc:
+SQL: SELECT * FROM players ORDER BY Age DESC, Name
+Pandas: players.sort_values(["Age", "Name"], ascending=[False, True])
+
+GROUP BY COUNT:
+SQL: SELECT COUNT(*) AS COUNT FROM players GROUP BY Position
+Pandas: players.groupby("Postiion").agg({"Name":"count"}).rename(columns={"Name":"COUNT"})
+
+GROUP BY SUM:
+SQL: SELECT SUM(Age) FROM players GROUP BY Position
+pandas: players.groupby('Position').agg({'Age':'SUM'})
+
+GROUP BY AVG:
+SQL: SELECT AVG(Age) AS Age FROM players GROUP BY Position
+Pandas: players.groupby("Position").agg({"Age": "mean"})
+
+Rank:
+SQL: SELECT *, RANK() OVER (ORDER BY AGE DESC) FROM players
+Pandas: players["AgeRank"] = players.Age.rank(ascending = False)
+
+Rank Partition by:
+SQL: SELECT *, RANK() OVER (Partition by Position Order by Age DESC) FROM players
+Pandas: players["AgeRank"] = players.groupby('Position')["Age"].rank(ascending = False)
+
+DENSE rank:
+SQL: SELECT *, DENSE_RANK() OVER (ORDER BY Age DESC) FROM players
+Pandas: 
+players["AgeRank"] = players.Age.rank(method="dense", ascending=False)
+
+Update:
+SQL: UPDATE players SET Age = 0 WHERE Age = 24
+Pandas: players.loc[players.Age == 24, "Age"] = 0
+
+JOIN:
+Inner Join:
+sql: SELECT
+  p.Id
+  ,p.Name
+  ,h.Homerun
+FROM players p
+INNER JOIN homeruns h
+  ON p.Id = h.PlayerId
+or
+SELECT
+  p.Id
+  ,p.Name
+  ,h.Homerun
+FROM players p, homeruns h
+where p.Id = h.PlayerId
+Pandas: player_homerun = pd.merge(players, homeruns, left_on="Id", right_on="PlayerId", how="inner")
+
