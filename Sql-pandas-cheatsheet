@@ -27,7 +27,7 @@ SQL: SELECT * FROM players WHERE NOT Position == 'QB'
 Pandas: players[~(players.Position == 'QB')]
 
 and:
-SQL: SELECT Name, Age FROM players WHERE Position = 'QB' AND Age < 30
+SQL: SELECT Name, Age  FROM players WHERE Position = 'QB' AND Age < 30
 Pandas: players[["Name", "Age"]][(players.Position == "QB") & (players.Age < 30)]
 
 or: 
