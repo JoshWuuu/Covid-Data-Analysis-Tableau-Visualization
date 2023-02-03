@@ -1,2 +1,1 @@
-# Sql-EDA-Tableau-Visualization
-The repo hosts project for data eda and tableau visualization for Coivd dataset.
+The tutorial is the example from https://public.tableau.com/app/resources/learn.
